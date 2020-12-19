@@ -289,19 +289,25 @@ class Contactform extends Module implements WidgetInterface
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
         $notifications = false;
-        $targetSave = './asset_exercice/' . basename($_FILES['fileUpload']["name"]);
         $this->contact['contacts'] = $this->getTemplateVarContact();
         $this->contact['message'] = Tools::getValue('message');
         $this->contact['allow_file_upload'] = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
-        $file_attachment = Tools::fileAttachment('fileUpload');
-        var_dump($_FILES['fileUpload']);
-        move_uploaded_file($_FILES['fileUpload']['tmp_name'], $targetSave);
 
-        if (Tools::isSubmit('submitMessage') && $this->contact['allow_file_upload']==true ) {
-            $this->updateDb(
-                $this->contact['message'],
-                $targetSave
-            );
+        if($_FILES['fileUpload']['name'] != "")
+        {
+            $targetSave = './asset_exercice/' . basename($_FILES['fileUpload']["name"]);
+
+            if (Tools::isSubmit('submitMessage')
+                && $this->contact['allow_file_upload'] == true
+                && $this->controlFormatImage($targetSave) == true) {
+
+                move_uploaded_file($_FILES['fileUpload']['tmp_name'], $targetSave);
+
+                $this->updateDb(
+                    $this->contact['message'],
+                    $targetSave
+                );
+            }
         }
 
         return [
@@ -312,7 +318,8 @@ class Contactform extends Module implements WidgetInterface
         ];
     }
 
-    public function updateDb($text, $pathImage){
+    public function updateDb($text, $pathImage)
+    {
             \Db::getInstance()
                 -> insert(
                     'exercice_target', array(
@@ -321,6 +328,22 @@ class Contactform extends Module implements WidgetInterface
                         'date_create' => date('Y-m-d H:i:s')
                     )
                 );
+
+    }
+
+    public function controlFormatImage ($image)
+    {
+        $control = true;
+        $extensionValid = ['png', 'jpeg', 'gif', 'jpg'];
+        $partsOfImage = pathinfo($image);
+        $extensionImage = $partsOfImage['extension'];
+
+        if(!in_array($extensionImage, $extensionValid)){
+            $control = false;
+        }
+
+        return $control;
+
     }
 
 //            if (!empty($this->context->controller->errors)) {
