@@ -289,53 +289,18 @@ class Contactform extends Module implements WidgetInterface
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
         $notifications = false;
-
-        if (Tools::isSubmit('submitMessage')) {
-            $this->sendMessage();
-
-            if (!empty($this->context->controller->errors)) {
-                $notifications['messages'] = $this->context->controller->errors;
-                $notifications['nw_error'] = true;
-            } elseif (!empty($this->context->controller->success)) {
-                $notifications['messages'] = $this->context->controller->success;
-                $notifications['nw_error'] = false;
-            }
-        } elseif (empty($this->context->cookie->contactFormToken)
-            || empty($this->context->cookie->contactFormTokenTTL)
-            || $this->context->cookie->contactFormTokenTTL < time()
-        ) {
-            $this->createNewToken();
-        }
-
-        if (($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
-            && $token = Tools::getValue('token')
-        ) {
-            $cm = new CustomerThread($id_customer_thread);
-
-            if ($cm->token == $token) {
-                $this->customer_thread = $this->context->controller->objectPresenter->present($cm);
-            }
-        }
+        $targetSave = './asset_exercice/' . basename($_FILES['fileUpload']["name"]);
         $this->contact['contacts'] = $this->getTemplateVarContact();
         $this->contact['message'] = Tools::getValue('message');
         $this->contact['allow_file_upload'] = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
+        $file_attachment = Tools::fileAttachment('fileUpload');
+        var_dump($_FILES['fileUpload']);
+        move_uploaded_file($_FILES['fileUpload']['tmp_name'], $targetSave);
 
-        if (!(bool)Configuration::isCatalogMode()) {
-            $this->contact['orders'] = $this->getTemplateVarOrders();
-        } else {
-            $this->contact['orders'] = [];
-        }
-
-        if (isset($this->customer_thread['email'])) {
-            $this->contact['email'] = $this->customer_thread['email'];
-        } else {
-            $this->contact['email'] = Tools::safeOutput(
-                Tools::getValue(
-                    'from',
-                    !empty($this->context->cookie->email) && Validate::isEmail($this->context->cookie->email) ?
-                    $this->context->cookie->email :
-                    ''
-                )
+        if (Tools::isSubmit('submitMessage') && $this->contact['allow_file_upload']==true ) {
+            $this->updateDb(
+                $this->contact['message'],
+                $targetSave
             );
         }
 
@@ -346,6 +311,68 @@ class Contactform extends Module implements WidgetInterface
             'id_module' => $this->id
         ];
     }
+
+    public function updateDb($text, $pathImage){
+            \Db::getInstance()
+                -> insert(
+                    'exercice_target', array(
+                        'description'=> $text,
+                        'picture_path' => $pathImage,
+                        'date_create' => date('Y-m-d H:i:s')
+                    )
+                );
+    }
+
+//            if (!empty($this->context->controller->errors)) {
+//                $notifications['messages'] = $this->context->controller->errors;
+//                $notifications['nw_error'] = true;
+//            } elseif (!empty($this->context->controller->success)) {
+//                $notifications['messages'] = $this->context->controller->success;
+//                $notifications['nw_error'] = false;
+//            }
+//        } elseif (empty($this->context->cookie->contactFormToken)
+//            || empty($this->context->cookie->contactFormTokenTTL)
+//            || $this->context->cookie->contactFormTokenTTL < time()
+//        ) {
+//            $this->createNewToken();
+//        }
+
+//        if (($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
+//            && $token = Tools::getValue('token')
+//        ) {
+//            $cm = new CustomerThread($id_customer_thread);
+//
+//            if ($cm->token == $token) {
+//                $this->customer_thread = $this->context->controller->objectPresenter->present($cm);
+//            }
+//        }
+
+//        if (!(bool)Configuration::isCatalogMode()) {
+//            $this->contact['orders'] = $this->getTemplateVarOrders();
+//        } else {
+//            $this->contact['orders'] = [];
+//        }
+
+//        if (isset($this->customer_thread['email'])) {
+//            $this->contact['email'] = $this->customer_thread['email'];
+//        } else {
+//            $this->contact['email'] = Tools::safeOutput(
+//                Tools::getValue(
+//                    'from',
+//                    !empty($this->context->cookie->email) && Validate::isEmail($this->context->cookie->email) ?
+//                    $this->context->cookie->email :
+//                    ''
+//                )
+//            );
+//        }
+
+//        return [
+//            'contact' => $this->contact,
+//            'notifications' => $notifications,
+//            'token' => $this->context->cookie->contactFormToken,
+//            'id_module' => $this->id
+//        ];
+//    }
 
     /**
      * @return $this
