@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2020-12-20 18:41:50
+/* Smarty version 3.1.34-dev-7, created on 2020-12-21 21:03:28
   from '/var/www/html/admin272gihg38/themes/default/template/modal.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_5fdf8cde625453_42499378',
+  'unifunc' => 'content_5fe0ff904ea073_86178875',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '6b9b0db6e343befeba93f64c95d6581d228ec93e' => 
     array (
       0 => '/var/www/html/admin272gihg38/themes/default/template/modal.tpl',
-      1 => 1606918382,
+      1 => 1608578945,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5fdf8cde625453_42499378 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5fe0ff904ea073_86178875 (Smarty_Internal_Template $_smarty_tpl) {
 ?><div class="modal fade" id="<?php echo $_smarty_tpl->tpl_vars['modal_id']->value;?>
 " tabindex="-1">
 	<div class="modal-dialog <?php if (isset($_smarty_tpl->tpl_vars['modal_class']->value)) {

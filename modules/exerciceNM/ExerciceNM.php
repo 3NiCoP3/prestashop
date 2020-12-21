@@ -19,7 +19,7 @@ class ExerciceNM extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Exercice TargetWeb');
+        $this->displayName = $this->l('Exercice targetWeb');
         $this->description = $this->l('Page permettant de télécharger une photo avec un texte');
 
     }
