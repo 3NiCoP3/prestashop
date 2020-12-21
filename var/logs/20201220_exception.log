@@ -1,0 +1,8 @@
+*ERROR* 	v1.7.7.0	2020/12/20 - 15:09:35: Link to database cannot be established: SQLSTATE[HY000] [2002] Connection refused at line 136 in file classes/db/DbPDO.php
+*ERROR* 	v1.7.7.0	2020/12/20 - 15:09:36: Link to database cannot be established: SQLSTATE[HY000] [2002] Connection refused at line 136 in file classes/db/DbPDO.php
+*ERROR* 	v1.7.7.0	2020/12/20 - 17:36:51: Table &#039;prestashop.ps_ps_exercice_target&#039; doesn&#039;t exist&lt;br /&gt;&lt;br /&gt;&lt;pre&gt;SELECT *
+FROM `ps_ps_exercice_target`
+&lt;/pre&gt; at line 769 in file classes/db/Db.php
+*ERROR* 	v1.7.7.0	2020/12/20 - 17:39:50: Table &#039;prestashop.ps_ps_exercice_target&#039; doesn&#039;t exist&lt;br /&gt;&lt;br /&gt;&lt;pre&gt;SELECT *
+FROM `ps_ps_exercice_target`
+&lt;/pre&gt; at line 769 in file classes/db/Db.php

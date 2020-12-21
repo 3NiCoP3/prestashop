@@ -24,6 +24,32 @@
 *}
 
 <div class="panel">
+	<table style="width:100%; border-collapse:separate; border-spacing:5px">
+		<thead>
+		<tr>
+			<th>Image</th>
+			<th>Description</th>
+			<th>Date de création</th>
+			<th>Action</th>
+		</tr>
+		</thead>
+		<tbody>
+		{foreach $result as $data}
+			<tr>
+				<td><img src="{$data.picture_path}" alt="" height=50 width=50></img></td>
+				<td>{$data.description}</td>
+				<td>{$data.date_create}</td>
+				<td><input class="btn btn-danger btn-sm" type="submit" name="submitDelete" value="{l s='Delete' d='Shop.Theme.Actions'}"></td>
+			</tr>
+		{/foreach}
+		</tbody>
+	</table>
+</div>
+
+
+
+
+<div class="panel">
 	<h3><i class="icon icon-credit-card"></i> {l s='TargetWeb' mod='targetWeb'}</h3>
 	<p>
 		<strong>{l s='Here is my new generic module!' mod='targetWeb'}</strong><br />

@@ -292,22 +292,28 @@ class Contactform extends Module implements WidgetInterface
         $this->contact['contacts'] = $this->getTemplateVarContact();
         $this->contact['message'] = Tools::getValue('message');
         $this->contact['allow_file_upload'] = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
+        $maxSizeImage = 2097152;
 
-        if($_FILES['fileUpload']['name'] != "")
+        if(isset($_FILES['fileUpload'])
+            && $_FILES['fileUpload']['name'] != ""
+            && $_FILES['fileUpload']['size'] <= $maxSizeImage)
         {
-            $targetSave = './asset_exercice/' . basename($_FILES['fileUpload']["name"]);
+            $targetSave = './asset_exercice/' . basename($_FILES['fileUpload']['name']);
 
             if (Tools::isSubmit('submitMessage')
                 && $this->contact['allow_file_upload'] == true
-                && $this->controlFormatImage($targetSave) == true) {
-
+                && $this->controlFormatImage($targetSave) == true)
+            {
                 move_uploaded_file($_FILES['fileUpload']['tmp_name'], $targetSave);
+                $urlOfImage = _PS_BASE_URL_.__PS_BASE_URI__.'asset_exercice/'.$_FILES['fileUpload']['name'];
 
-                $this->updateDb(
+                $this->insertDb(
                     $this->contact['message'],
-                    $targetSave
+                    $urlOfImage
                 );
             }
+        } else {
+            $this->context->controller->errors[] = $this->l('It was not possible to validate the reCaptcha.');
         }
 
         return [
@@ -318,7 +324,7 @@ class Contactform extends Module implements WidgetInterface
         ];
     }
 
-    public function updateDb($text, $pathImage)
+    public function insertDb($text, $pathImage)
     {
             \Db::getInstance()
                 -> insert(
